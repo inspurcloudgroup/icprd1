@@ -25,8 +25,8 @@
 - [ ] Linux 日志系统                                      
 - [x] Git 与 GitHub 简介                  
 - [x] Git 基础操作                        
-- [ ] Git 分支操作                        
-- [ ] 多人协作 GitHub 部分                
+- [x] Git 分支操作                        
+- [x] 多人协作 GitHub 部分                
 - [ ] 多人协作 Git 部分                   
 - [ ] Git标签tag和GitHub版本releases      
 
