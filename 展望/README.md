@@ -27,8 +27,8 @@
 - [x] Git 基础操作                        
 - [x] Git 分支操作                        
 - [x] 多人协作 GitHub 部分                
-- [ ] 多人协作 Git 部分                   
-- [ ] Git标签tag和GitHub版本releases      
+- [x] 多人协作 Git 部分                   
+- [x] Git标签tag和GitHub版本releases      
 
 ### Go语言学习任务
 - [x] Go语言介绍                      
