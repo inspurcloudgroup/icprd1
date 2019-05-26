@@ -27,8 +27,8 @@
 - [x] Git 基础操作                        
 - [x] Git 分支操作                        
 - [x] 多人协作 GitHub 部分                
-- [ ] 多人协作 Git 部分                   
-- [ ] Git标签tag和GitHub版本releases      
+- [x] 多人协作 Git 部分                   
+- [x] Git标签tag和GitHub版本releases      
 
 ### Go语言学习任务
 - [x] Go语言介绍                      
@@ -36,8 +36,8 @@
 - [x] GO 语言顺序编程                 
 - [x] 面向对象编程                    
 - [x] 并发编程                        
-- [ ] 词频统计综合案例                
-- [ ] GO 语言 IDE 及环境配置          
+- [x] 词频统计综合案例                
+- [x] GO 语言 IDE 及环境配置          
 - [ ] 项目：GO语言开发2048                  
 - [ ] 项目：Go语言制作Markdown预览器        
 - [ ] 项目：缓存组件的实现                  
