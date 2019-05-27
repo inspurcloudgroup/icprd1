@@ -1,10 +1,10 @@
 ## 展望的学习记录
 
 ### Linux学习任务
-- [ ] Linux 简介与使用                                    
-- [ ] Linux 基本操作                                      
+- [x] Linux 简介与使用                                    
+- [x] Linux 基本操作                                      
 - [ ] 挑战：为 shiyanlou 用户设置环境变量                 
-- [ ] Linux 用户与权限                                    
+- [x] Linux 用户与权限                                    
 - [ ] 挑战：添加新用户及用户组                            
 - [ ] Linux 目录与文件                                    
 - [ ] Linux 文件查找与打包                                
