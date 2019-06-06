@@ -1,4 +1,7 @@
-引擎语法基于Django
+参考资料：
+
+1.  <https://zhuanlan.zhihu.com/p/27277032>
+2. <https://www.shiyanlou.com/courses/583/labs/1936/document/>
 
 
 
@@ -10,7 +13,7 @@
    <p>Welcome, {{user_name}}!</p>
    ```
 
-2. 取得对象的属性或者词典的键值
+2. 取得对象的属性或者词典的键值[todo]
 
    ```html
    dict.key
@@ -20,7 +23,7 @@
    <p>The price is: {{product.price}}, with a {{product.discount}}% discount.</p>
    ```
 
-3. 可以使用过滤器过滤修改数据，过滤器使用管道符号调用
+3. 可以使用过滤器过滤修改数据，过滤器使用管道符号调用[todo]
 
    ```html
    <p>Short name: {{story.subject|slugify|lower}}</p>
@@ -40,7 +43,7 @@
    <p>Products:</p>
    <ul>
    {% for product in product_list %}
-       <li>{{ product.name }}: {{ product.price|format_price }}</li>
+       <li>{{ product.name }}: {{ format_price }}</li>
    {% endfor %}
    </ul>
    ```
@@ -48,7 +51,7 @@
 6. 注释
 
    ```python
-   {# This is the best template ever! #}
+   {# This is comment! #}
    ```
 
 
@@ -65,54 +68,50 @@ demo
 
 ```html
 # 模板
-<p>Welcome, {{user_name}}!</p>
-<p>Products:</p>
-<ul>
-{% for product in product_list %}
-    <li>{{ product.name }}:
-        {{ product.price|format_price }}</li>
+<h1>{{ name }}</h1>
+{# comment #}
+{% if a > b %}
+<span>a greater then b</span>
+{% elif a < b %}
+             <span>a less then b</span>
+{% else %}
+<span>a equals to b</span>
+{% endif %}
+<div>test test test</div>
+{% if False %}
+<strong>this will not appear</strong>
+{% endif %}
+<span>-----------------</span>
+{% for v in values %}
+<li>fruit: {{v}}</li>
+{% if v == 'pear' %}
+{% break %}
+{% endif %}
 {% endfor %}
-</ul>
 ```
 
 ```python
 # 编译生成的函数
-def render_function(context, do_dots):
-    c_user_name = context['user_name']
-    c_product_list = context['product_list']
-    c_format_price = context['format_price']
-
+def render_function():
     result = []
-    append_result = result.append
-    extend_result = result.extend
-    to_str = str
+    result.extend(['<h1>',str(name),'</h1>'])
+    if a > b:
+        result.extend(['<span>a greater then b</span>'])
+    elif a < b:
+        result.extend(['<span>a less then b</span>'])
+    else:
+        result.extend(['<span>a equals to b</span>'])
+    result.extend(['<div>test test test</div>'])
+    if False:
+        result.extend(['<strong>this will not appear</strong>'])
+    result.extend(['<span>-----------------</span>'])
+    for v in values:
+        result.extend(['<li>fruit:',str(v),'</li>'])
+        if v == 'pear':
+            break
+    return "".join(result)
 
-    extend_result([
-        '<p>Welcome, ',
-        to_str(c_user_name),
-        '!</p>\n<p>Products:</p>\n<ul>\n'
-    ])
-    for c_product in c_product_list:
-        extend_result([
-            '\n    <li>',
-            to_str(do_dots(c_product, 'name')),
-            ':\n        ',
-            to_str(c_format_price(do_dots(c_product, 'price'))),
-            '</li>\n'
-        ])
-    append_result('\n</ul>\n')
-    return ''.join(result)
 ```
-
-解释：
-
-1. 模版都会被转换为render_function函数
-2. context上下文环境存储导入的数据词典
-3. do_dots存储用来取得对象属性或者词典键值
-4. 从头开始分析这段代码，最开始是对输入的数据词典进行解包，得到的每个变量都使用`c_`作为前缀
-5. 使用队列来存储中间结果
-6. 替换数据
-7. 把队列合成一个字符串作为结果文本返回
 
 
 
