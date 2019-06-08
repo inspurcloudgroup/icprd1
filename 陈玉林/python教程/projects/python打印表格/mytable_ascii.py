@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import re
 '''
 边框字符参考:
     https://en.wikipedia.org/wiki/Box-drawing_character
