@@ -1,0 +1,116 @@
+# Django 基础教程
+
+## 使用MTV模式实现数据库增删改 
+
+实验目的：通过简单的表单提交数据
+
+### 1、设计表单
+
+在`lib/templates/lib/detail.html`里，添加一个表单。 
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/courses/uid1079991-20190611-1560253251539)
+
+简要说明：
+
+- 上面的模板是输入相应的书名、作者和出版社后，点击添加，将数据存储到数据库并刷新页面显示出来。
+- 我们设置表单的`action="{% url 'addBook' %}"`,并设置`method="post"`。使用 `method="post"`（与其相对的是 `method="get"`）是非常重要的，因为这个提交表单的行为会改变服务器端的数据,无论何时，当你需要创建一个改变服务器端数据的表单时，请使用`method="post"`。
+- 由于我们创建一个 POST 表单（它具有修改数据的作用），所以我们需要小心跨站点请求伪造。 但你不必太过担心，因为 Django 已经拥有一个用来防御它的非常容易使用的系统。 简而言之，所有针对内部 URL 的 POST 表单都应该使用 `{% csrf_token %}` 模板标签。
+
+### 2、命名空间
+
+在一个真实的 Django 项目中，可能会有多个应用lib。lib 应用有 detail 视图，可能另一个博客应用也有同名的视图。Django 区分 {% url %} 标签对应哪一个应用的 URL 的方法是：在根 URLconf 中添加命名空间。 
+
+实验中在 lib/urls.py 中添加一行`app_name = 'lib'  `
+
+然后回到 `lib/templates/lib/detail.html` 更改`action` ：
+
+`<form action="{% url 'lib:addBook' %}" method="post" name="addBook">`
+
+### 3、添加书籍
+
+在`lib/urls.py`里添加URL地址映射：
+
+`path('addBook/', views.addBook, name='addBook'), `
+
+然后创建`addBook`函数来实现我们添加书籍的功能。
+
+将下面的代码添加到`lib/views.py`：
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/courses/uid1079991-20190611-1560253990974)
+
+简单说明：
+
+- `request.POST` 是一个类字典对象，可以通过关键字的名字获取提交的数据。 这个例子中，`request.POST['name']` 以字符串形式返回`name`的值。 `request.POST` 的值永远是字符串。
+- 在添加书籍之后，代码返回一个 `HttpResponseRedirect` 而不是常用的 `HttpResponse`, `HttpResponseRedirect` 只接收一个参数：用户将要被重定向的 URL。
+- 你应该在每次处理POST数据时，都返回`HttpResponseRedirect` 。这也不是 Django 的特定技巧，这是优秀的网站开发的实践。
+- 在这个例子中，我们在 `HttpResponseRedirect` 的构造函数中使用 `reverse()` 函数。这个函数避免了我们在视图函数中硬编码 URL。它需要我们给出想要跳转的视图的名字和该视图所对应的 URL 模式中需要给该视图提供的参数。 `reverse()`调用后将返回这样一个字符串：`/lib/detail/`.
+
+添加书籍功能完成，现在可以随意添加书籍。
+
+打开网页后：
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/courses/uid1079991-20190611-1560254093659)
+
+添加表单后：
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/courses/uid1079991-20190611-1560254153144)
+
+### 4、删除书籍
+
+首先在`lib/templates/lib/detail.html`中设计模板 ：其实就是添加删除一个按钮，同时传递id
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/courses/uid1079991-20190611-1560254307452)
+
+接着，配置url，只需在`lib/urls.py`中添加这一行：
+
+`path('delBook/<int:book_id>', views.deleteBook, name='delBook'), `，这里的`<int:book_id>`是接收传递的参数`book_id` 。
+
+最后在视图`lib/views.py `中添加：
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/courses/uid1079991-20190611-1560254537202)
+
+这个视图中，获取到book的id，根据id来删除指定书籍。最后跟上面的添加书籍函数相同，使用重定位刷新页面。 
+
+### 5、运行
+
+打开网页：
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/courses/uid1079991-20190611-1560254777059)
+
+删除表单后：
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/courses/uid1079991-20190611-1560254835806)
+
+## 总结
+
+### MTV设计模式
+
+#### 1、MVC模式
+
+MVC，是模型（Model）-视图（View）-控制器（Controller）的缩写。其具体定义如下： 
+
+* M:模型（Model），数据存取层，负责业务对象和数据库对象。 
+* V:视图（View），与用户的交互，负责显示与怎样显示。 
+* C:控制器（Controller），接受用户动作，调用模型，输出相应视图。 
+
+三者以一种插件式的，松耦合的方式连接在一起：
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/courses/uid1079991-20190611-1560254969816)
+
+#### 2、MTV模式
+
+MTV具体定义如下：
+
+* M:模型（Model）,负责业务对象和数据库的关系映射。
+* T:模板（Template）,负责如何把页面展示给用户。
+* V:视图（View）,负责业务逻辑，并在适当时候调用模型和模板。
+
+#### 3、URL分发器
+
+URL分发器的作用是将页面请求分发给不同的视图(View)处理，视图再调用相应的模型(Model)和模板(Template) 
+
+Django Web框架： 
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/courses/uid1079991-20190611-1560255102361)
+
+在MTV模式中，MVC中的View分成了视图View（展现哪些数据）和模板Template（如何展现）2个部分，而控制器(Controller)这个要素由框架自己来实现了，我们需要做的就是把URL对应到视图V就可以了，通过这样的URL配置，系统将一个请求发送到一个合适的视图。 
